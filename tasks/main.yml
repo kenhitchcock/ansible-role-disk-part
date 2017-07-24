@@ -1,0 +1,29 @@
+---
+- name: Looking for Data disk
+  stat: path="{{ item.disk }}"
+  register: ret_stat_disk
+  with_items:
+   - "{{ disk_devices }}"
+
+- debug: msg="{{ret_stat_disk}}"
+- debug: msg="{{disk_devices}}"
+
+- name: Starting partition configuration
+  include: partition.yml
+  when: ret_stat_disk is defined
+  with_items:
+    - "{{ ret_stat_disk.results }}"
+  loop_control:
+    loop_var: item_disk_devices
+
+- name: Setup LVOL
+  include: lvol.yml
+  when: disk_lvol
+  register: ret_setup_lvm
+  with_items:
+    - "{{ disk_lvol }}"
+  loop_control:
+    loop_var: item_disk_lvol
+
+- include: fs.yml
+- include: mount.yml

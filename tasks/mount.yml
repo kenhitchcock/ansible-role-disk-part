@@ -1,0 +1,31 @@
+---
+- name: Ensure the mount directory exists
+  file:
+    path: "{{ item.mount }}"
+    owner: '{{ disk_user | default("root") }}'
+    group: '{{ disk_group | default("root") }}'
+    state: directory
+  with_items: "{{ disk_devices }}"
+  tags:
+    - disk
+
+- name: Get UUID for partition
+  command: blkid -s UUID -o value "{{ item.device }}"
+  register: disk_blkid
+  with_items: "{{ disk_devices }}"
+  changed_when: False
+  tags:
+    - disk
+
+- name: Mount additional disk
+  mount:
+    name: "{{ item_mount.item.mount }}"
+    src: "UUID={{ item_mount.stdout }}"
+    state: "{{ item_mount.item.mount_state |d(disk_part_mount_state) }}"
+    fstype: "{{ item_mount.item.fs_type |d(disk_part_mount_fstype) }}"
+    opts: "{{ item_mount.item.mount_opts |d(disk_part_mount_opts) }}"
+    passno: "{{ item_mount.item.mount_passno |d(0) }}"
+  when: item_mount.rc is defined and item_mount.rc == 0
+  with_items: "{{ disk_blkid.results }}"
+  loop_control:
+    loop_var: item_mount

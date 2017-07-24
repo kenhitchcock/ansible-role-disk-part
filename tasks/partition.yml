@@ -1,0 +1,24 @@
+---
+- name: Install disk Linux utils
+  package:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - parted
+  tags:
+    - disk-part
+
+- name: Partition additional disks
+  shell: |
+    if
+        [ -b "{{ item.disk }}" ]
+    then
+        [ -b "{{ item.device }}" ] || parted --script "{{ item.disk }}" mklabel gpt mkpart primary 1MiB 100%
+    fi
+  args:
+    creates: "{{ item.device }}"
+    executable: "/bin/bash"
+  with_items: "{{ disk_devices }}"
+  register: ret_part_disks
+  tags:
+    - disk

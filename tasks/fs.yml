@@ -1,0 +1,10 @@
+---
+- name: Creating filesystem
+  filesystem:
+    dev: "{{ item.device }}"
+    fstype: "{{ item.fs_type }}"
+    force: "{{ item.fs_force | d(omit) }}"
+    opts: "{{ item.fs_opts | d(omit) }}"
+  tags:
+    - disk
+  with_items: "{{ disk_devices }}"

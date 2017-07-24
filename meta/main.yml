@@ -1,0 +1,8 @@
+galaxy_info:
+  author: Cloud Operations Team
+  description: Partition an give disk, LV or not, on Linux System.
+  company: Chaordic Systems
+  license: Apache-2.0
+  min_ansible_version: 2.1
+  galaxy_tags: []
+dependencies: []

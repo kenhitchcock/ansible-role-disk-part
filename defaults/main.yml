@@ -1,0 +1,32 @@
+---
+disk_devices: []
+disk_lvol: []
+
+# Example of vars:
+# disk_devices:
+#   - disk: /dev/xvdf
+#     device: /dev/xvdf1
+#     lv: yes
+#     fs_type: ext4
+#     mount_opts: defaults
+#     mount_state: mounted
+#     mount: /opt/
+#
+# disk_lvol:
+# - vg_name: vg_opt
+#   vg_pv: /dev/xvdf1
+#   lv_dev:
+#     - device: /dev/vg_opt/opt
+#       name: opt
+#       size: '100%VG'
+#       force: yes
+#       fs_type: ext4
+#       mount_opts: defaults
+#       mount_state: mounted
+#       mount: /opt/
+
+## Custom args
+disk_part_mount_passno: 0
+disk_part_mount_state: mounted
+disk_part_mount_fstype: xfs
+disk_part_mount_opts: defaults,nobootwait

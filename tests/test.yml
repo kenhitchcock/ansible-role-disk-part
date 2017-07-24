@@ -1,0 +1,8 @@
+---
+- name: Playbook sample to disk partition
+  hosts: host-test
+  become: yes
+  gather_facts: yes
+
+  roles:
+    - disk-part
