@@ -13,6 +13,16 @@
   command: blkid -s UUID -o value "{{ item.device }}"
   register: disk_blkid
   with_items: "{{ disk_devices }}"
+  when: item.device is defined
+  changed_when: False
+  tags:
+    - disk
+
+- name: Get UUID for partition
+  command: blkid -s UUID -o value "{{ item.disk }}"
+  register: disk_blkid
+  with_items: "{{ disk_devices }}"
+  when: item.device is not defined
   changed_when: False
   tags:
     - disk
