@@ -18,7 +18,7 @@
 
 - name: Setup LVOL
   include: lvol.yml
-  when: disk_lvol
+  when: disk_lvol is defined
   register: ret_setup_lvm
   with_items:
     - "{{ disk_lvol }}"

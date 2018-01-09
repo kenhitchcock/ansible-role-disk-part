@@ -1,5 +1,5 @@
 ---
-- name: Creating filesystem
+- name: Creating filesystem in partition
   filesystem:
     dev: "{{ item.device }}"
     fstype: "{{ item.fs_type }}"
@@ -8,3 +8,15 @@
   tags:
     - disk
   with_items: "{{ disk_devices }}"
+  when: item.device is defined
+
+- name: Creating filesystem directly to disk
+  filesystem:
+    dev: "{{ item.disk }}"
+    fstype: "{{ item.fs_type }}"
+    force: "{{ item.fs_force | d(omit) }}"
+    opts: "{{ item.fs_opts | d(omit) }}"
+  tags:
+    - disk
+  with_items: "{{ disk_devices }}"
+  when: item.device is not defined
