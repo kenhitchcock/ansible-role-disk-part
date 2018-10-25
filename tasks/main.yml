@@ -17,13 +17,15 @@
     loop_var: item_disk_devices
 
 - name: Setup LVOL
-  include: lvol.yml
-  when: disk_lvol is defined
-  register: ret_setup_lvm
+  include: lvm.yml
+  when:
+    - disk_lvol is defined
+    - not ansible_check_mode
   with_items:
     - "{{ disk_lvol }}"
   loop_control:
     loop_var: item_disk_lvol
+  register: ret_setup_lvm
 
 - include: fs.yml
 - include: mount.yml
