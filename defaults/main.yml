@@ -30,3 +30,6 @@ disk_part_mount_passno: 0
 disk_part_mount_state: mounted
 disk_part_mount_fstype: xfs
 disk_part_mount_opts: defaults
+
+# defaults
+lvol_lv_dev: []
