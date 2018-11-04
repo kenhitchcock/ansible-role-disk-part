@@ -5,9 +5,8 @@
     owner: '{{ disk_user | default("root") }}'
     group: '{{ disk_group | default("root") }}'
     state: directory
+    mode: "{{ item.mount_mode |d(omit) }}"
   with_items: "{{ disk_devices }}"
-  when:
-    - not ansible_check_mode
   tags:
     - disk
 
