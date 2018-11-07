@@ -8,7 +8,9 @@
   tags:
     - disk
   with_items: "{{ disk_devices }}"
-  when: item.device is defined
+  when:
+    - item.device is defined
+    - not ansible_check_mode
 
 - name: Creating filesystem directly to disk
   filesystem:
@@ -19,4 +21,6 @@
   tags:
     - disk
   with_items: "{{ disk_devices }}"
-  when: item.device is not defined
+  when:
+    - item.device is not defined
+    - not ansible_check_mode

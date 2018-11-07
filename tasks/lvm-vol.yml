@@ -1,0 +1,16 @@
+---
+
+- stat:
+    path: "{{ item_vol.device }}"
+  register: stat_vol
+
+- debug: var=stat_vol
+
+- name: LVOL Setup LV
+  lvol:
+    state: present
+    vg: "{{ lvol_vg_name }}"
+    lv: "{{ item_vol.name }}"
+    size: "{{ item_vol.size }}"
+    force: "{{ item_vol.force }}"
+  when: not(stat_vol.stat.exists)

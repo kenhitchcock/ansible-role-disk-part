@@ -17,14 +17,10 @@
     pvs: "{{ lvol_vg_pv }}"
 
 - name: LVOL Setup LV
-  lvol:
-    state: present
-    vg: "{{ lvol_vg_name }}"
-    lv: "{{ item.name }}"
-    size: "{{ item.size }}"
-    force: "{{ item.force }}"
-  with_items:
-    - "{{ lvol_lv_dev }}"
+  include: lvm-vol.yml
+  with_items: "{{ lvol_lv_dev }}"
+  loop_control:
+    loop_var: item_vol
 
 - set_fact:
     disk_devices: "{{ lvol_lv_dev }}"

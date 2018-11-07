@@ -5,13 +5,14 @@
     owner: '{{ disk_user | default("root") }}'
     group: '{{ disk_group | default("root") }}'
     state: directory
+    mode: "{{ item.mount_mode |d(omit) }}"
   with_items: "{{ disk_devices }}"
   tags:
     - disk
 
-- name: Get UUID for partition
+- name: Get UUID for device
   command: blkid -s UUID -o value "{{ item.device }}"
-  register: disk_blkid
+  register: disk_blkid_1
   with_items: "{{ disk_devices }}"
   when: item.device is defined
   changed_when: False
@@ -20,12 +21,14 @@
 
 - name: Get UUID for partition
   command: blkid -s UUID -o value "{{ item.disk }}"
-  register: disk_blkid
+  register: disk_blkid_2
   with_items: "{{ disk_devices }}"
   when: item.device is not defined
   changed_when: False
   tags:
     - disk
+
+- debug: var=disk_blkid_1
 
 - name: Mount additional disk
   mount:
@@ -36,6 +39,21 @@
     opts: "{{ item_mount.item.mount_opts |d(disk_part_mount_opts) }}"
     passno: "{{ item_mount.item.mount_passno |d(0) }}"
   when: item_mount.rc is defined and item_mount.rc == 0
-  with_items: "{{ disk_blkid.results }}"
+  with_items: "{{ disk_blkid_1.results }}"
+  loop_control:
+    loop_var: item_mount
+
+- debug: var=disk_blkid_2
+
+- name: Mount additional disk
+  mount:
+    name: "{{ item_mount.item.mount }}"
+    src: "UUID={{ item_mount.stdout }}"
+    state: "{{ item_mount.item.mount_state |d(disk_part_mount_state) }}"
+    fstype: "{{ item_mount.item.fs_type |d(disk_part_mount_fstype) }}"
+    opts: "{{ item_mount.item.mount_opts |d(disk_part_mount_opts) }}"
+    passno: "{{ item_mount.item.mount_passno |d(0) }}"
+  when: item_mount.rc is defined and item_mount.rc == 0
+  with_items: "{{ disk_blkid_2.results }}"
   loop_control:
     loop_var: item_mount
