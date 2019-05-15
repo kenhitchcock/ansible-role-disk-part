@@ -19,6 +19,8 @@ Role Variables
       mount_opts: defaults,nobootwait
       mount_state: mounted
       mount: /opt/
+      mount_user: marco
+      mount_group: admin
 
     disk_lvol:
     - vg_name: vg_opt

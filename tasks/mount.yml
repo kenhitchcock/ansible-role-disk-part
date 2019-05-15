@@ -1,9 +1,24 @@
 ---
+- name: Ensure group's owner of the mount path exists
+  group:
+    name: "{{ item.mount_group }}"
+    state: present
+  when: item.mount_group is defined
+  with_items: "{{ disk_devices }}"
+
+- name: Ensure user's owner of the mount path exists
+  user:
+    name: "{{ item.mount_user }}"
+    state: present
+    group: "{{ item.mount_group |d(omit) }}"
+  when: item.mount_user is defined
+  with_items: "{{ disk_devices }}"
+
 - name: Ensure the mount directory exists
   file:
     path: "{{ item.mount }}"
-    owner: '{{ disk_user | default("root") }}'
-    group: '{{ disk_group | default("root") }}'
+    owner: "{{ item.mount_user | d(disk_user) }}"
+    group: "{{ item.mount_group | d(disk_group) }}"
     state: directory
     mode: "{{ item.mount_mode |d(omit) }}"
   with_items: "{{ disk_devices }}"

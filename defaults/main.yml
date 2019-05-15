@@ -33,3 +33,7 @@ disk_part_mount_opts: defaults
 
 # defaults
 lvol_lv_dev: []
+
+# user/group
+disk_user: root
+disk_group: root
