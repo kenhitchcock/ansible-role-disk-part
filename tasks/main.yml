@@ -1,4 +1,6 @@
 ---
+- include: dependencies.yml
+
 - name: Looking for Data disk
   stat: path="{{ item.disk }}"
   register: ret_stat_disk
