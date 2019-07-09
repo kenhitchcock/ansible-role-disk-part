@@ -27,3 +27,5 @@
 
 - name: nvme | run mapping script
   command: /usr/local/bin/ebs-nvme-mapping
+  args:
+    creates: /var/opt/.ebs-nvme-mapping
