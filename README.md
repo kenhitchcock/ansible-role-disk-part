@@ -22,7 +22,7 @@ Role Variables
       mount_user: marco
       mount_group: admin
 
-    disk_lvol:
+  disk_lvol:
     - vg_name: vg_opt
       vg_pv: /dev/nvme0n1
       lv_dev:
@@ -33,7 +33,29 @@ Role Variables
           fs_type: ext4
           mount_opts: defaults,nobootwait
           mount_state: mounted
-        mount: /data/
+          mount: /data/
+
+  # For multi disks
+  disk_lvol:
+    - vg_name: vg_data
+      vg_pv: /dev/xvdb
+      lv_dev:
+        - device: /dev/vg_data/lv_data
+          name: lv_data
+          size: '10G'
+          force: yes
+          fs_type: xfs
+          mount_opts: defaults
+          mount_state: mounted
+          mount: /data/
+        - device: /dev/vg_data/lv_data2
+          name: lv_data2
+          size: '10G'
+          force: yes
+          fs_type: xfs
+          mount_opts: defaults
+          mount_state: mounted
+          mount: /data2
 
 Dependencies
 ------------

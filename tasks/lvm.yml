@@ -11,12 +11,16 @@
   with_items:
     - "{{ disk_lvol }}"
 
+- name: "Check how many disks to setup"
+  debug:
+    msg: "{{ lvol_lv_dev }}"
+
 - name: LVOL Setup VG
   lvg:
     vg: "{{ lvol_vg_name }}"
     pvs: "{{ lvol_vg_pv }}"
 
-- name: LVOL Setup LV
+- name: "LVOL Setup LV"
   include: lvm-vol.yml
   with_items: "{{ lvol_lv_dev }}"
   loop_control:
